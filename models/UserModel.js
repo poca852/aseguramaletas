@@ -1,70 +1,41 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db/config');
+const { Schema, model } = require("mongoose");
 
-const UserModel = sequelize.define('user', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
-
+const UserModel = new Schema({
   email: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
 
   fullName: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
 
-  phone: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-
-  img: {
-    type: DataTypes.STRING
-  },
+  img: String,
 
   password: {
-    type: DataTypes.STRING
-  },
-
-  address: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true
   },
 
   rol: {
-    type: DataTypes.ENUM,
-    values: ['admin', 'user', 'super_admin'],
-    defaultValue: 'user'
-  },
-
-  nit: {
-    type: DataTypes.STRING
-  },
-
-  country: {
-    type: DataTypes.STRING
+    type: String,
+    enum: ['admin', 'user', 'super_admin'],
+    default: 'user'
   },
 
   isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
+    type: Boolean,
+    default: true
   },
 
-  google: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
+});
 
-  passport: {
-    type: DataTypes.STRING
-  },
+UserModel.methods.toJSON = function(){
+  const {__v, _id, password, ...rest} = this.toObject();
+  rest.id = _id;
+  return rest;
+}
 
-}, {timestamps: false});
-
-module.exports = UserModel;
+module.exports = model('UserModel', UserModel);

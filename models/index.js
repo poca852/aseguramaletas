@@ -1,10 +1,11 @@
 const Server = require('./server');
 const UserModel = require('./UserModel');
-
-// relationes
-
+const OrderModel = require('./OrderModel');
+const ProductModel = require('./ProductModel');
 
 module.exports = {
   Server,
-  UserModel
+  UserModel,
+  OrderModel,
+  ProductModel
 }
