@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { PDFDocument, StandardFonts, rgb, degrees } = require('pdf-lib');
+const cloudinary = require('cloudinary').v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
+const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
 const moment = require('moment-timezone');
+
 
 // Create a new PDFDocument
 const generarPdf = async ({
@@ -11,10 +14,10 @@ const generarPdf = async ({
   finish_date,
   flight,
   airline,
-  _id }) => {
+  _id,
+  plan }) => {
 
-
-  const existingPdfBytes = fs.readFileSync(path.join(__dirname, '../pdf/plan-individual.pdf'));
+  const existingPdfBytes = fs.readFileSync(path.join(__dirname, `../pdf/${plan}.pdf`));
 
   const date_initial = moment(initial_date).format('DD/MM/YYYY');
   const date_finish = moment(finish_date).format('DD/MM/YYYY');
@@ -92,8 +95,16 @@ const generarPdf = async ({
     color: rgb(0, 0, 0),
   })
   // Serialize the PDFDocument to bytes (a Uint8Array)
-  const pdfBytes = await pdfDoc.save()
-  fs.writeFileSync(path.join(__dirname, `../pdf/${_id}.pdf`), pdfBytes)
-}
+  const pdfBytes = await pdfDoc.save();
+  fs.writeFileSync(path.join(__dirname, `../pdf/orders/${_id}.pdf`), pdfBytes);
 
-module.exports = generarPdf;
+  const doc = path.join(__dirname, `../pdf/orders/${_id}.pdf`);
+  const {secure_url} = await cloudinary.uploader.upload(doc);
+  return secure_url;
+};
+
+
+
+// sendEmailresetPass();
+
+module.exports = generarPdf

@@ -1,9 +1,9 @@
-const fs = require('fs');
 const { request, response } = require("express");
 const { OrderModel, UserModel } = require('../models');
 const { ObjectId } = require('mongoose').Types;
 const moment = require('moment-timezone');
 const generarPdf = require('../helpers/generar-pdf');
+const confirmOrder = require("../helpers/send-email");
 moment().tz('America/Guatemala').format()
 
 const coleccionesPermitidas = [
@@ -18,11 +18,11 @@ const addOrder = async(req = request, res = response) => {
     const initial_date = moment().utc('6');
     const finish_date = moment().add(30, 'days').utc('6');
 
-    const order = new OrderModel({...body, initial_date, finish_date});
-
-    
+    const order = await OrderModel.create({...body, initial_date, finish_date});
+    const secure_url = await generarPdf(order);
+    order.pdf = secure_url;
     await order.save();
-    generarPdf(order.toJSON());
+    await confirmOrder(body.email, 'Order', order, secure_url);
 
     return res.status(201).json({
       ok: true,
