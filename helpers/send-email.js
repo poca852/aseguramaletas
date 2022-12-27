@@ -3,29 +3,34 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 var htmlToText = require('nodemailer-html-to-text').htmlToText;
 
-const confirmOrder = async (email, asunto = '', {id}, secure_url) => {
+const confirmOrder = async ({
+  email,
+  firstName,
+  lastName,
+  pdf,
+}) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.ethereal.email",
       port: 587,
       auth: {
-        user: "einar.kuhlman83@ethereal.email", // generated ethereal user
-        pass: 'G94znWRrcBHQ2KUg4t'
+        user: "fidel.corkery@ethereal.email", // generated ethereal user
+        pass: 'dtnzerfeCh2YEcMxXz'
       },
     });
 
     transporter.use('compile', htmlToText());
 
     const isSend = await transporter.sendMail({
-      from: "einar.kuhlman83@ethereal.email",
+      from: "david-cuspoca@hotmail.com",
       to: email,
-      subject: asunto,
+      subject: 'Poliza',
       html: `
-            <h1>Por favor descarga el archivo de la poliza</h1>
+            <h1>Querid@ ${firstName} ${lastName} por favor descargue el archivo adjunto, en donde viene su poliza</h1>
           `,
       attachments: [{
-        filename: 'poliza.pdf',
-        path: path.join(__dirname, `../pdf/orders/${id}.pdf`),
+        filename: `${pdf}`,
+        path: path.join(__dirname, `../pdf/orders/${pdf}`),
         contentType: 'application/pdf'
       }]
     });

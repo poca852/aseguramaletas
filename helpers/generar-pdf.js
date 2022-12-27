@@ -99,8 +99,8 @@ const generarPdf = async ({
   fs.writeFileSync(path.join(__dirname, `../pdf/orders/${_id}.pdf`), pdfBytes);
 
   const doc = path.join(__dirname, `../pdf/orders/${_id}.pdf`);
-  const {secure_url} = await cloudinary.uploader.upload(doc);
-  return secure_url;
+  // const {secure_url} = await cloudinary.uploader.upload(doc);
+  return `${_id}.pdf`;
 };
 
 

@@ -6,11 +6,6 @@ const generarPdf = require('../helpers/generar-pdf');
 const confirmOrder = require("../helpers/send-email");
 moment().tz('America/Guatemala').format()
 
-const coleccionesPermitidas = [
-  'users',
-  'orders',
-];
-
 const addOrder = async(req = request, res = response) => {
   try {
 
@@ -22,7 +17,7 @@ const addOrder = async(req = request, res = response) => {
     const secure_url = await generarPdf(order);
     order.pdf = secure_url;
     await order.save();
-    await confirmOrder(body.email, 'Order', order, secure_url);
+    // await confirmOrder(body.email, 'Order', order, secure_url);
 
     return res.status(201).json({
       ok: true,
@@ -33,8 +28,11 @@ const addOrder = async(req = request, res = response) => {
   }
 };
 
-const searchOrder = async(termino = '', res = response) => {
+const searchOrder = async(req = request, res = response) => {
+
+  const {termino} = req.params;
   const isMongoId = ObjectId.isValid(termino);
+
   if(isMongoId){
     const order = await OrderModel.findById(termino)
       .populate('plan', ['-__v'])
@@ -44,17 +42,12 @@ const searchOrder = async(termino = '', res = response) => {
   };
 
   const regex = new RegExp(termino, 'i');
-  const orders = await UserModel.find({
-    $or: [{email: regex}, {fullName: regex}],
-    $and: [{isActive: true}]
+  const orders = await OrderModel.find({
+    $or: [{email: regex}, {firstName: regex}, {lastName: regex}],
   })
     .populate({
-      path: 'orders',
-      select: ['-__v', '-cliente'],
-      populate: {
-        path: 'products',
-        select: ['-__v']
-      }
+      path: 'plan',
+      select: ['-__v'],
     })
 
   return res.status(200).json({
@@ -62,27 +55,34 @@ const searchOrder = async(termino = '', res = response) => {
   });
 };
 
-const buscar = (req, res = response) => {
-  const {coleccion, termino = ''} = req.params;
-  if(!coleccionesPermitidas.includes(coleccion)){
-    return res.status(400).json({
-      msg: 'La coleccion no es permitida'
-    });
-  };
+const activarOrder = async(req = request, res = response) => {
+  try {
+    const {idOrder} = req.params;
 
-  switch (coleccion) {
-    case 'orders':
-      searchOrder(termino, res)
-      break;
-  
-    default:
-      res.status(401).json({
-        msg: 'Coleccion no encontrada'
-      })
+    const order = await OrderModel.findByIdAndUpdate(
+      idOrder, 
+      {isPending: false}, 
+      {new: true}
+    );
+
+    await confirmOrder(order);
+
+    res.status(200).json({
+      ok: true
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'hable con el administrador | please check logs'
+    })
   }
-};
+}
+
 
 module.exports = {
   addOrder,
-  buscar
+  searchOrder,
+  activarOrder
 }

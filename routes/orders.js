@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const {check} = require('express-validator');
-const { addOrder, buscar } = require('../controllers/orders');
+const { addOrder, searchOrder, activarOrder } = require('../controllers/orders');
 const { validarCampos } = require('../middlewares');
 
 const router = Router();
@@ -21,6 +21,8 @@ router.post('/', [
   validarCampos
 ], addOrder);
 
-router.get('/:coleccion/:termino', buscar)
+router.get('/search/:termino', searchOrder)
+
+router.get('/active/:idOrder', activarOrder)
 
 module.exports = router;
