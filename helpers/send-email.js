@@ -11,11 +11,11 @@ const confirmOrder = async ({
 }) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      host: "pro.turbo-smtp.com",
+      port: 465,
       auth: {
-        user: "fidel.corkery@ethereal.email", // generated ethereal user
-        pass: 'dtnzerfeCh2YEcMxXz'
+        user: "david-cuspoca@hotmail.com", // generated ethereal user
+        pass: 'xno0J0lJ'
       },
     });
 
@@ -30,7 +30,7 @@ const confirmOrder = async ({
           `,
       attachments: [{
         filename: `${pdf}`,
-        path: path.join(__dirname, `../pdf/orders/${pdf}`),
+        path: path.join(__dirname, `../uploads/orders/${pdf}`),
         contentType: 'application/pdf'
       }]
     });

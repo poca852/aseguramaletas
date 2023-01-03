@@ -4,6 +4,7 @@ const { ObjectId } = require('mongoose').Types;
 const moment = require('moment-timezone');
 const generarPdf = require('../helpers/generar-pdf');
 const confirmOrder = require("../helpers/send-email");
+const { subirArchivo } = require("../helpers/subir-archivo");
 moment().tz('America/Guatemala').format()
 
 const addOrder = async(req = request, res = response) => {
@@ -55,6 +56,34 @@ const searchOrder = async(req = request, res = response) => {
   });
 };
 
+const getOrderByPassport = async(req = request, res = response) => {
+  try{
+    const { passport } = req.query;
+
+    const orden = await OrderModel.findOne({
+      passport: passport.toUpperCase()
+    });
+
+    if(!orden){
+      return res.status(404).json({
+        ok: false,
+        msg: `No existe una orden con el pasaporte ${passport}`
+      });
+    };
+
+    return res.status(200).json({
+      ok: true,
+      order: orden
+    })
+  }catch(e){
+    console.log(e);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador'
+    })
+  }
+}
+
 const activarOrder = async(req = request, res = response) => {
   try {
     const {idOrder} = req.params;
@@ -80,9 +109,34 @@ const activarOrder = async(req = request, res = response) => {
   }
 }
 
+const subirVaucher = async(req = request, res = response) => {
+  try {
+    const {idOrder} = req.params;
+    const file = await subirArchivo(req.files, undefined, 'vaucher');
+
+    const orderUpdated = await OrderModel.findByIdAndUpdate(idOrder, {
+      vaucher: file
+    }, {new: true});
+
+    res.status(200).json({
+      ok: true,
+      order: orderUpdated
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador'
+    })
+  }
+}
+
 
 module.exports = {
   addOrder,
   searchOrder,
-  activarOrder
+  activarOrder,
+  getOrderByPassport,
+  subirVaucher
 }

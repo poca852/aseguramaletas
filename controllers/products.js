@@ -29,7 +29,24 @@ const getProducts = async(req = request, res = response) => {
   };
 };
 
+const getProduct = async(req = request, res = response) => {
+  try{
+    const {id} = req.params;
+
+    const product = await ProductModel.findById(id);
+
+    return res.status(200).json(product)
+  }catch(e){
+    console.log(e);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador y revisa los mensajes de consola'
+    })
+  }
+}
+
 module.exports = {
   addProduct,
-  getProducts
+  getProducts,
+  getProduct
 }

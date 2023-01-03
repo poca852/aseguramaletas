@@ -48,7 +48,8 @@ const OrderModel = new Schema({
   passport: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    uppercase: true
   },
   
   flight: {
@@ -88,6 +89,8 @@ const OrderModel = new Schema({
   ticket: String,
 
   pdf: String,
+
+  vaucher: String,
 
   isPending: {
     type: Boolean,

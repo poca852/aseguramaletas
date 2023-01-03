@@ -6,10 +6,12 @@ const ProductModel = new Schema({
     type: String,
     required: true
   },
+  ref: String,
   description: String,
   benefits: [String],
   price: Number,
   img: String,
+  url_pay: String
 
 });
 

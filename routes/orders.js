@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const {check} = require('express-validator');
-const { addOrder, searchOrder, activarOrder } = require('../controllers/orders');
-const { validarCampos } = require('../middlewares');
+const { addOrder, searchOrder, activarOrder, getOrderByPassport, subirVaucher } = require('../controllers/orders');
+const { validarCampos, validarArchivoSubir } = require('../middlewares');
 
 const router = Router();
+
 
 router.post('/', [
   check('firstName').isString(),
@@ -21,8 +22,13 @@ router.post('/', [
   validarCampos
 ], addOrder);
 
-router.get('/search/:termino', searchOrder)
+router.get('/search', getOrderByPassport);
 
-router.get('/active/:idOrder', activarOrder)
+router.get('/search/:termino', searchOrder);
+
+router.post('/addVaucher/:idOrder', [validarArchivoSubir], subirVaucher);
+
+// esto lo hara especificamente el administrador o persona encargada de verificar esto
+router.get('/active/:idOrder', activarOrder);
 
 module.exports = router;
