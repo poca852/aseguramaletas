@@ -9,12 +9,9 @@ const {ProductModel} = require('../models')
 
 // Create a new PDFDocument
 const generarPdf = async ({
-  firstName, 
-  lastName, 
+  name, 
   initial_date, 
   finish_date,
-  flight,
-  airline,
   _id,
   plan}) => {
 
@@ -48,7 +45,7 @@ const generarPdf = async ({
   })
 
   // Draw a string of text diagonally across the first page
-  firstPage.drawText(`${firstName} ${lastName}`, {
+  firstPage.drawText(`${name}`, {
     x: 90,
     y: height / 2 + 237,
     size: 10,
@@ -57,7 +54,7 @@ const generarPdf = async ({
     // rotate: degrees(-45),
   });
 
-  firstPage.drawText(`Del vuelo ${flight} de la aerolinea ${airline}`, {
+  firstPage.drawText(`N/A`, {
     x: 65,
     y: height / 2 + 223,
     size: 10,

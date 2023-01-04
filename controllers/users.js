@@ -16,10 +16,7 @@ const addUser = async(req = request, res = response) => {
 
     await newUser.save();
 
-    return res.status(201).json({
-      ok: true,
-      newUser
-    })
+    return res.status(201).json(newUser)
 
     
   } catch (error) {
@@ -27,6 +24,21 @@ const addUser = async(req = request, res = response) => {
   }
 };
 
+const getAllUser = async(req = request, res = response) => {
+  try {
+    const users = await UserModel.find();
+
+    return res.status(200).json(users)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "hable con el administrador"
+    })
+  }
+}
+
 module.exports = {
-  addUser
+  addUser,
+  getAllUser
 };

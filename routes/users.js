@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { addUser } = require('../controllers/users');
 const { validarJWT, validarCampos } = require('../middlewares');
+const { addUser, getAllUser } = require('../controllers/users');
 
 const router = Router();
 
@@ -13,5 +13,7 @@ router.post('/', [
   check('password').not().isEmpty(),
   validarCampos
 ], addUser)
+
+router.get('/all', validarJWT, getAllUser)
 
 module.exports = router;

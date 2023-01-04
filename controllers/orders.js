@@ -1,3 +1,4 @@
+const path = require('path');
 const { request, response } = require("express");
 const { OrderModel, UserModel } = require('../models');
 const { ObjectId } = require('mongoose').Types;
@@ -44,7 +45,7 @@ const searchOrder = async(req = request, res = response) => {
 
   const regex = new RegExp(termino, 'i');
   const orders = await OrderModel.find({
-    $or: [{email: regex}, {firstName: regex}, {lastName: regex}],
+    $or: [{email: regex}, {name: regex}],
   })
     .populate({
       path: 'plan',
@@ -96,9 +97,7 @@ const activarOrder = async(req = request, res = response) => {
 
     await confirmOrder(order);
 
-    res.status(200).json({
-      ok: true
-    })
+    return res.status(200).json(true)
 
   } catch (error) {
     console.log(error);
@@ -132,11 +131,50 @@ const subirVaucher = async(req = request, res = response) => {
   }
 }
 
+const getAllOrders = async(req = request, res = response) => {
+  try {
+
+    let { isPending = true } = req.query;
+    isPending = JSON.parse(isPending.toLowerCase());
+
+    const orders = await OrderModel.find({
+      isPending
+    })
+      .populate('plan', ['-__v']);
+
+    return res.status(200).json(orders)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador y revice los console.log'
+    })
+  }
+}
+
+const mostrarVaucher = async(req = request, res = response) => {
+  try {
+    const {idOrder} = req.params;
+    const orden = await OrderModel.findById(idOrder);
+    const pathImg = path.join(__dirname, '../uploads/vaucher', orden.vaucher)
+
+    res.sendFile(pathImg);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador revise los logs'
+    })
+  }
+}
+
 
 module.exports = {
   addOrder,
   searchOrder,
   activarOrder,
   getOrderByPassport,
-  subirVaucher
+  subirVaucher,
+  getAllOrders,
+  mostrarVaucher
 }

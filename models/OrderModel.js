@@ -2,14 +2,7 @@ const {Schema, model} = require('mongoose');
 
 const OrderModel = new Schema({
 
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-    uppercase: true
-  },
-
-  lastName: {
+  name: {
     type: String,
     required: true,
     trim: true,
@@ -28,46 +21,10 @@ const OrderModel = new Schema({
     default: 'C/F'
   },
 
-  address: {
-    type: String,
-    required: true
-  },
-
-  phone: {
-    type: String,
-    required: true
-  },
-
-  country: {
-    type: String,
-    required: true,
-    trim: true,
-    uppercase: true
-  },
-
   passport: {
     type: String,
     required: true,
     trim: true,
-    uppercase: true
-  },
-  
-  flight: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-
-  airline: {
-    type: String,
-    required: true,
-    trim: true,
-    uppercase: true
-  },
-
-  destino: {
-    type: String,
-    required: true,
     uppercase: true
   },
   
