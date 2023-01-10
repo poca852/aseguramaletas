@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 var htmlToText = require('nodemailer-html-to-text').htmlToText;
 
 const confirmOrder = async ({
-  email,
+  email = '',
   name,
   pdf,
 }) => {
@@ -12,6 +12,7 @@ const confirmOrder = async ({
     const transporter = nodemailer.createTransport({
       host: process.env.HOST_SMTP,
       port: +process.env.PORT_SMTP,
+      secure: true,
       auth: {
         user: process.env.USER_SMTP, // generated ethereal user
         pass: process.env.PASS_SMTP
@@ -21,8 +22,8 @@ const confirmOrder = async ({
     transporter.use('compile', htmlToText());
 
     const isSend = await transporter.sendMail({
-      from: "david-cuspoca@hotmail.com",
-      to: email,
+      from: "webmaster@aseguramaletas.com",
+      to: email.toLowerCase(),
       subject: 'Poliza',
       html: `
             <h1>Querid@ ${name} por favor descargue el archivo adjunto, en donde viene su poliza</h1>
