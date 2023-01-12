@@ -35,6 +35,8 @@ const confirmOrder = async ({
       }]
     });
 
+    console.log(isSend)
+
   } catch (error) {
     console.log(error, "email not sent");
   }

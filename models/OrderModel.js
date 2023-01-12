@@ -54,6 +54,11 @@ const OrderModel = new Schema({
     default: true
   },
 
+  date: {
+    type: Date,
+    default: new Date()
+  }
+
 });
 
 OrderModel.methods.toJSON = function(){
