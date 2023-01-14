@@ -24,9 +24,10 @@ const confirmOrder = async ({
     const isSend = await transporter.sendMail({
       from: "webmaster@aseguramaletas.com",
       to: email.toLowerCase(),
-      subject: 'Poliza',
+      subject: 'Asguramaletas - poliza de seguro.',
       html: `
-            <h1>Querid@ ${name} por favor descargue el archivo adjunto, en donde viene su poliza</h1>
+            <h3>Poliza de seguro</h3>
+            <p>Estimado(a) ${name} muchas gracias por confiar en nosotros para asegurar su equipaje, a continuación le adjuntamos la póliza del seguro, por favor guárdela.</p>
           `,
       attachments: [{
         filename: `${pdf}`,
@@ -34,8 +35,6 @@ const confirmOrder = async ({
         contentType: 'application/pdf'
       }]
     });
-
-    console.log(isSend)
 
   } catch (error) {
     console.log(error, "email not sent");

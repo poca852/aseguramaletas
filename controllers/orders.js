@@ -89,6 +89,7 @@ const activarOrder = async(req = request, res = response) => {
   try {
     const {idOrder} = req.params;
 
+
     const order = await OrderModel.findByIdAndUpdate(
       idOrder, 
       {isPending: false}, 
