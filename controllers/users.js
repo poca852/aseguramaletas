@@ -38,7 +38,38 @@ const getAllUser = async(req = request, res = response) => {
   }
 }
 
+const editUser = async(req = request, res = response) => {
+  try {
+    const { idUser } = req.params;
+    const { password, ...resto} = req.body;
+    const user = req.user;
+
+    if(user.rol !== 'admin' && user.rol !== 'super_admin'){
+      return res.status(401).json({
+        ok: false,
+        msg: 'No tiene permiso de hacer esto'
+      })
+    }
+
+    if(password){
+      resto.password = bcryptjs.hashSync(password, 10);
+    }
+
+    await UserModel.findByIdAndUpdate(idUser, resto);
+
+    return res.status(200).json(true)
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador y revise los logs'
+    })
+  }
+}
+
 module.exports = {
   addUser,
-  getAllUser
+  getAllUser,
+  editUser
 };

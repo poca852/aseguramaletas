@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarJWT, validarCampos } = require('../middlewares');
-const { addUser, getAllUser } = require('../controllers/users');
+const { addUser, getAllUser, editUser } = require('../controllers/users');
+const { existeUser } = require('../helpers/db-validators');
 
 const router = Router();
 
@@ -15,5 +16,12 @@ router.post('/', [
 ], addUser)
 
 router.get('/all', validarJWT, getAllUser)
+
+router.put('/:idUser', [
+  validarJWT,
+  check('idUser', 'No es un id valido').isMongoId(),
+  check('idUser').custom(existeUser),
+  validarCampos
+], editUser)
 
 module.exports = router;

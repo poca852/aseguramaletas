@@ -1,3 +1,5 @@
+const {UserModel} = require('../models')
+
 const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
   const incluida = colecciones.includes(coleccion);
 
@@ -8,6 +10,14 @@ const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
   return true;
 };
 
+const existeUser = async(user = '') => {
+  const validation = await UserModel.findById(user);
+  if(!validation){
+    throw new Error('No existe este usuario')
+  }
+}
+
 module.exports = {
-  coleccionesPermitidas
+  coleccionesPermitidas,
+  existeUser
 }

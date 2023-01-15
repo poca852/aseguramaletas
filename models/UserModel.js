@@ -21,7 +21,7 @@ const UserModel = new Schema({
 
   rol: {
     type: String,
-    enum: ['admin', 'user', 'super_admin'],
+    enum: ['admin', 'editor', 'super_admin'],
     default: 'user'
   },
 

@@ -14,8 +14,9 @@ const addOrder = async(req = request, res = response) => {
     const body = req.body;
     const initial_date = moment().utc('6');
     const finish_date = moment().add(30, 'days').utc('6');
+    const date = moment().utc(true);
 
-    const order = await OrderModel.create({...body, initial_date, finish_date});
+    const order = await OrderModel.create({...body, initial_date, finish_date, date});
     const secure_url = await generarPdf(order);
     order.pdf = secure_url;
     await order.save();
