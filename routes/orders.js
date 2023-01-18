@@ -9,7 +9,6 @@ const router = Router();
 router.post('/', [
   check('name').isString(),
   check('email').isEmail(),
-  check('nit').optional({nullable: true}).isString(),
   check('passport').isString(),
   check('plan', 'No es un id valido').isMongoId(),
   validarCampos
