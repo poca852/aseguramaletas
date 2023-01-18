@@ -9,7 +9,7 @@ const router = Router();
 router.post('/', [
   check('name').isString(),
   check('email').isEmail(),
-  check('nit').optional({nullable: true}).isString().isLength({max: 9, min: 9}),
+  check('nit').optional({nullable: true}).isString(),
   check('passport').isString(),
   check('plan', 'No es un id valido').isMongoId(),
   validarCampos
