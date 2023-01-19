@@ -54,9 +54,7 @@ class Server {
   }
 
   listen() {
-    this.app.listen(this.port, () => {
-      console.log('server online')
-    })
+    this.app.listen(this.port, () => {})
   }
 }
 

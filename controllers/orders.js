@@ -1,11 +1,9 @@
 const path = require('path');
 const { request, response } = require("express");
-const { OrderModel, UserModel } = require('../models');
+const { OrderModel } = require('../models');
 const { ObjectId } = require('mongoose').Types;
 const moment = require('moment-timezone');
-const generarPdf = require('../helpers/generar-pdf');
-const confirmOrder = require("../helpers/send-email");
-const { subirArchivo } = require("../helpers/subir-archivo");
+const { generarPdf, confirmOrder, subirArchivo } = require('../helpers');
 moment().tz('America/Guatemala').format()
 
 const addOrder = async(req = request, res = response) => {
@@ -20,7 +18,8 @@ const addOrder = async(req = request, res = response) => {
     const secure_url = await generarPdf(order);
     order.pdf = secure_url;
     await order.save();
-    // await confirmOrder(body.email, 'Order', order, secure_url);
+
+    await confirmOrder(order);
 
     return res.status(201).json({
       ok: true,
@@ -128,7 +127,7 @@ const subirVaucher = async(req = request, res = response) => {
     console.log(error);
     res.status(500).json({
       ok: false,
-      msg: 'Hable con el administrador'
+      msg: error
     })
   }
 }
